@@ -10,7 +10,8 @@ export const useLogin = () => {
         setIsLoading(true)
         setError(null)
 
-        const response = await fetch('api/user/login', {
+        const apiUrl = import.meta.env.VITE_API_URL || '';
+        const response = await fetch(apiUrl + '/api/user/login', {
             method : 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email, password})

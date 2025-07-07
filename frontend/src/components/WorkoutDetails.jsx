@@ -14,7 +14,8 @@ const WorkoutDetails = ({ workout }) => {
       return
     }
 
-    const response = await fetch('/api/workouts/' + workout._id, {
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    const response = await fetch(apiUrl + '/api/workouts/' + workout._id, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${user.token}`

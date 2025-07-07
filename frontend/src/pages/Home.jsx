@@ -13,7 +13,8 @@ const Home = () => {
 
     useEffect(() => {
         const fetchWorkouts = async () => {
-            const response = await fetch('/api/workouts', {
+            const apiUrl = import.meta.env.VITE_API_URL || '';
+            const response = await fetch(apiUrl + '/api/workouts', {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
                 }
