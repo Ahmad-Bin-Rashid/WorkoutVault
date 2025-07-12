@@ -12,12 +12,15 @@ import Signup from './pages/Signup.jsx';
 //hooks
 import { useAuthContext } from './hooks/useAuthContext';
 
+import { Toaster } from 'react-hot-toast';
+
 function App() {
 
   const { user } = useAuthContext()
 
   return (
     <div className="App">
+      <Toaster position="top-center" />
       <BrowserRouter>
         <Navbar />
         <div className='pages'>

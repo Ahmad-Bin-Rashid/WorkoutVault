@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuthContext } from "./useAuthContext"
+import toast from 'react-hot-toast'
 
 export const useSignup = () => {
     const [ error, setError ] = useState(null)
@@ -21,12 +22,14 @@ export const useSignup = () => {
         if (!response.ok) {
             setError(json.error)
             setIsLoading(false)
+            toast.error(json.error || 'Failed to sign up')
         }
         if (response.ok) {
             localStorage.setItem('user', JSON.stringify(json))
 
             dispatch({type: 'LOGIN', payload: json})
             setIsLoading(false)
+            toast.success('Signed up successfully')
         }
     }
 
