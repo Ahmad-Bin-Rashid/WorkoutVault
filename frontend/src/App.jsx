@@ -8,6 +8,7 @@ import Home from './pages/Home.jsx';
 import Navbar from './components/Navbar.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import Profile from './pages/Profile.jsx';
 
 //hooks
 import { useAuthContext } from './hooks/useAuthContext';
@@ -28,6 +29,7 @@ function App() {
             <Route path='/' element= {user ? <Home /> : <Navigate to='/login' />} />
             <Route path='/login' element= {!user ? <Login /> : <Navigate to='/' />} />
             <Route path='/signup' element= {!user ? <Signup /> : <Navigate to='/' />} />
+            <Route path='/profile' element= {user ? <Profile /> : <Navigate to='/login' />} />
           </Routes>
         </div>
       </BrowserRouter>

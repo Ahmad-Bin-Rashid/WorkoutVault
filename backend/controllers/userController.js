@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Workout = require("../models/workoutModel");
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
@@ -78,12 +79,7 @@ const signupUser = async (req, res) => {
 
 // delete the user
 const deleteUser = async (req, res) => {
-    const { id } = req.params
-
-    // validating the id
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: 'Invalid ID!' })
-    }
+    const id = req.user._id
 
     const user = await User.findOneAndDelete({ _id: id })
 
@@ -91,25 +87,43 @@ const deleteUser = async (req, res) => {
         return res.status(404).json({ error: 'Unable to delete!' })
     }
 
+    // Also delete all workouts associated with this user
+    await Workout.deleteMany({ user_id: id })
+
     res.status(200).json(user)
 }
 
-// update the user ------------------------------------------ incomplete
+// update the user
 const updateUser = async (req, res) => {
-    const { id } = req.params
+    const id = req.user._id
+    const { username, password } = req.body
 
-    // validating the user
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ error: 'Invalid ID!' })
+    let updateData = {}
+
+    if (username) {
+        updateData.username = username
     }
 
-    const user = await User.findOneAndUpdate({ _id: id }, { ...req.body })
+    if (password) {
+        const bcrypt = require('bcrypt')
+        const validator = require('validator')
+
+        if (!validator.isStrongPassword(password)) {
+            return res.status(400).json({ error: 'Password must be atleast 8 characters long. It should contain lowercase, uppercase, number and a special character.' })
+        }
+
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(password, salt)
+        updateData.password = hash
+    }
+
+    const user = await User.findOneAndUpdate({ _id: id }, updateData, { new: true })
 
     if (!user) {
         return res.status(404).json({ error: 'Unable to update!' })
     }
 
-    res.status(200).json(user)
+    res.status(200).json({ username: user.username, email: user.email })
 }
 
 
