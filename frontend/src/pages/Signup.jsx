@@ -52,9 +52,11 @@ const Signup = () => {
           value={password2} 
           required/>
 
+        <div>
         <button disabled={isLoading}>
             {isLoading ? <div className="spinner"></div> : 'Sign up'}
         </button>
+        </div>
         {error && <div className="error">{error}</div>}
         {backendError && <div className="error">{backendError}</div>}
     </form>

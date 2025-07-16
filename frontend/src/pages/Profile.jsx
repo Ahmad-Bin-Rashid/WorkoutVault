@@ -108,7 +108,7 @@ const Profile = () => {
             </form>
 
             <div className="danger-zone">
-                <h4>Danger Zone</h4>
+                <h4>Warning!</h4>
                 <p>Once you delete your account, there is no going back. Please be certain.</p>
                 <button className="delete-btn" onClick={handleDelete} disabled={isDeleting}>
                     {isDeleting ? <div className="spinner"></div> : 'Delete Account'}

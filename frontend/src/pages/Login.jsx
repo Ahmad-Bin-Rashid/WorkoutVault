@@ -19,10 +19,11 @@ const Login = () => {
         <input type="email" onChange={(e) => setEmail(e.target.value)} value={email} required/>
         <label>Password</label>
         <input type="password" onChange={(e) => setPassword(e.target.value)} value={password} required/>
-
+        <div>
         <button disabled={isLoading}>
             {isLoading ? <div className="spinner"></div> : 'Log in'}
         </button>
+        </div>
         {error && <div className="error">{error}</div>}
     </form>
   )
