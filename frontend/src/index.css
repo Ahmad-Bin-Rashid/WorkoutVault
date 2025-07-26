@@ -1,19 +1,42 @@
 /* google font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
 
-/* layout */
+
+/* ----- LAYOUT ----- */
+
 :root {
   --primary: #3198c0;
-  /* --primary: #1aac83; */
   --error: #e7195a;
+  
+  /* light theme variables */
+  --bg-color: #f1f1f1;
+  --surface-color: #fff;
+  --text-primary: #333;
+  --text-secondary: #555;
+  --border-color: #ddd;
+  --input-bg: #fff;
+  --button-hover: rgba(49, 152, 192, 0.8);
 }
+
+[data-theme='dark'] {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #aaaaaa;
+  --border-color: #333;
+  --input-bg: #2a2a2a;
+}
+
 body {
-  background: #f1f1f1;
+  background: var(--bg-color);
+  color: var(--text-primary);
   margin: 0;
   font-family: "Poppins";
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 header {
-  background: #fff;
+  background: var(--surface-color);
+  transition: background-color 0.3s ease;
 }
 header .container {
   max-width: 1400px;
@@ -24,7 +47,7 @@ header .container {
   justify-content: space-between;
 }
 header a {
-  color: #333;
+  color: var(--text-primary);
   text-decoration: none;
 }
 .pages{
@@ -33,14 +56,16 @@ header a {
   margin: 0 auto;
 }
 
-/* homepage */
+
+/* ----- HOMEPAGE ----- */
+
 .home {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 100px;
 }
 .workout-details {
-  background: #fff;
+  background: var(--surface-color);
   border-radius: 4px;
   margin: 20px auto;
   padding: 20px;
@@ -55,17 +80,17 @@ header a {
 .workout-details p {
   margin: 0;
   font-size: 0.9em;
-  color: #555;
+  color: var(--text-secondary);
 }
 .workout-details span {
   font-size: 0.9em;
   position: absolute;
   right: 20px;
   cursor: pointer;
-  background: #e5e5e5;
+  background: var(--bg-color);
   padding: 4px;
   border-radius: 10%;
-  color: #222;
+  color: var(--text-primary);
 }
 
 .workout-details span.delete {
@@ -76,7 +101,9 @@ header a {
   bottom: 20px;
 }
 
-/* new workout form */
+
+/* ----- NEW WORKOUT FORM ----- */
+
 label, input {
   display: block;
 }
@@ -85,7 +112,9 @@ input {
   margin-top: 10px;
   margin-bottom: 20px;
   width: 100%;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -117,13 +146,15 @@ input.error {
   border: 1px solid var(--error);
 }
 
-/* navbar */
+
+/* ----- NAVBAR ----- */
+
 nav {
   display: flex;
   align-items: center;
 }
 nav a {
-  background: #fff;
+  background: transparent;
   color: var(--primary);
   border: 2px solid var(--primary);
   padding: 4px 10px;
@@ -136,9 +167,8 @@ nav a:hover {
   color: #fff;
 }
 
-
 nav button {
-  background: #fff;
+  background: transparent;
   color: var(--primary);
   border: 2px solid var(--primary);
   padding: 6px 10px;
@@ -148,22 +178,44 @@ nav button {
   margin-left: 15px;
   transition: ease .4s;
 }
+
 nav button:hover {
   background: var(--primary);
   color: #fff;
 }
+
+button.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--primary);
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  margin-left: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* button.theme-toggle:hover {
+  background: rgba(150, 150, 150, 0.2);
+  color: var(--primary);
+} */
 
 nav div span {
   margin: auto 5px;
   cursor:default;
 }
 
-/* auth forms */
+
+/* ----- AUTH FORMS ----- */
+
 form.signup, form.login {
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
-  background: #fff;
+  background: var(--surface-color);
   border-radius: 4px;
 }
 
@@ -177,7 +229,8 @@ form.signup button, form.login button {
 }
 
 
-/* loader spinner */
+/* ----- LOADER SPINNER ----- */
+
 .spinner {
   display: inline-block;
   width: 20px;
@@ -193,13 +246,17 @@ form.signup button, form.login button {
   to { transform: rotate(360deg); }
 }
 
-/* edit mode inputs */
+
+/* ----- EDIT MODE INPUTS ----- */
+
 .edit-input {
   display: inline-block;
   width: auto;
   padding: 4px 8px;
   margin: 2px 0;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-primary);
   border-radius: 4px;
   font-size: 1em;
 }
@@ -227,14 +284,16 @@ form.signup button, form.login button {
   right: 60px;
 }
 
-/* profile page */
+
+/* ----- PROFILE PAGE ----- */
+
 .profile-container {
   max-width: 500px;
   margin: 40px auto;
 }
 
 .profile-form {
-  background: #fff;
+  background: var(--surface-color);
   padding: 30px;
   border-radius: 4px;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
