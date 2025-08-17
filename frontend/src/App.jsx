@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 // pages
 import Home from './pages/Home.jsx';
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
 
 // components
 import Navbar from './components/Navbar.jsx';
@@ -30,6 +32,8 @@ function App() {
             <Route path='/login' element= {!user ? <Login /> : <Navigate to='/' />} />
             <Route path='/signup' element= {!user ? <Signup /> : <Navigate to='/' />} />
             <Route path='/profile' element= {user ? <Profile /> : <Navigate to='/login' />} />
+            <Route path='/forgot-password' element= {!user ? <ForgotPassword /> : <Navigate to='/' />} />
+            <Route path='/reset-password/:id/:token' element= {!user ? <ResetPassword /> : <Navigate to='/' />} />
           </Routes>
         </div>
       </BrowserRouter>

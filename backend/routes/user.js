@@ -1,5 +1,5 @@
 const express = require('express')
-const { getUsers, getUser, loginUser, signupUser, deleteUser, updateUser } = require('../controllers/userController')
+const { getUsers, getUser, loginUser, signupUser, deleteUser, updateUser, forgotPassword, resetPassword } = require('../controllers/userController')
 const requireAuth = require('../middleware/requireAuth')
 
 const router = express.Router()
@@ -15,6 +15,12 @@ router.post('/login', loginUser)
 
 // user Signup
 router.post('/signup', signupUser)
+
+// forgot password
+router.post('/forgot-password', forgotPassword)
+
+// reset password
+router.post('/reset-password/:id/:token', resetPassword)
 
 // require auth for profile routes
 router.use('/profile', requireAuth)

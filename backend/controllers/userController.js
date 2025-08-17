@@ -127,5 +127,84 @@ const updateUser = async (req, res) => {
 }
 
 
+const sendEmail = require('../utils/emailService');
 
-module.exports = { getUsers, getUser, loginUser, signupUser, deleteUser, updateUser }
+// forgot password
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Create a unique secret for this user using their current password hash
+        const secret = process.env.JWT_SECRET + user.password;
+        
+        // Create token that expires in 15 minutes
+        const token = jwt.sign({ email: user.email, id: user._id }, secret, { expiresIn: '15m' });
+
+        // Frontend URL where the user will be redirected
+        // Make sure FRONTEND_URL is set in .env or default to localhost
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const link = `${frontendUrl}/reset-password/${user._id}/${token}`;
+
+        const success = await sendEmail({
+            to: user.email,
+            subject: 'WorkoutVault - Password Reset',
+            text: `Click the link to reset your password: ${link}\nThis link is valid for 15 minutes.`
+        });
+
+        if (success) {
+            res.status(200).json({ message: 'Password reset link sent to your email' });
+        } else {
+            res.status(500).json({ error: 'Failed to send email' });
+        }
+
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+// reset password
+const resetPassword = async (req, res) => {
+    const { id, token } = req.params;
+    const { password } = req.body;
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Verify token using the same secret
+        const secret = process.env.JWT_SECRET + user.password;
+        
+        try {
+            jwt.verify(token, secret);
+        } catch (err) {
+            return res.status(400).json({ error: 'Invalid or expired token' });
+        }
+
+        const bcrypt = require('bcrypt');
+        const validator = require('validator');
+
+        if (!validator.isStrongPassword(password)) {
+            return res.status(400).json({ error: 'Password must be atleast 8 characters long. It should contain lowercase, uppercase, number and a special character.' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        user.password = hash;
+        await user.save();
+
+        res.status(200).json({ message: 'Password has been successfully updated' });
+
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+module.exports = { getUsers, getUser, loginUser, signupUser, deleteUser, updateUser, forgotPassword, resetPassword }
