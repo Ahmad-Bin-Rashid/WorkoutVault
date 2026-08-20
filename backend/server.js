@@ -12,6 +12,27 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// database connection middleware
+let cachedPromise = null;
+const connectDB = async (req, res, next) => {
+  if (mongoose.connection.readyState === 1) {
+    return next();
+  }
+  if (!cachedPromise) {
+    cachedPromise = mongoose.connect(process.env.MONGO_URI);
+  }
+  try {
+    await cachedPromise;
+    next();
+  } catch (error) {
+    cachedPromise = null;
+    console.error('Database connection error:', error);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
+};
+
+app.use(connectDB);
+
 app.use((req, res, next) => {
   console.log(req.path, req.method)
   next()
@@ -21,20 +42,11 @@ app.use((req, res, next) => {
 app.use('/api/workouts', workoutRoutes)
 app.use('/api/user', userRoutes)
 
-// connect to database
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    // listen for requests only if not in Vercel production
-    if (process.env.NODE_ENV !== 'production') {
-      app.listen(process.env.PORT, () => {
-        console.log('connected to db & listening on port', process.env.PORT)
-      })
-    } else {
-      console.log('connected to db')
-    }
+// listen for requests only if not in Vercel production
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(process.env.PORT, () => {
+    console.log('listening on port', process.env.PORT)
   })
-  .catch((error) => {
-    console.log(error)
-  })
+}
 
 module.exports = app
